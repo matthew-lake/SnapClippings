@@ -63,7 +63,6 @@ class CameraControls @JvmOverloads constructor(context: Context, attrs: Attribut
             if (view is CameraView) {
                 cameraView = view
                 cameraView!!.bindCameraKitListener(this)
-                setFacingImageBasedOnCamera()
             }
         }
 
@@ -76,15 +75,7 @@ class CameraControls @JvmOverloads constructor(context: Context, attrs: Attribut
         }
     }
 
-    private fun setFacingImageBasedOnCamera() {
-        if (cameraView!!.isFacingFront) {
-            facingButton!!.setImageResource(R.drawable.ic_facing_back)
-        } else {
-            facingButton!!.setImageResource(R.drawable.ic_facing_front)
-        }
-    }
-
-    //@OnCameraKitEvent(CameraKitImage.class)
+    @OnCameraKitEvent(CameraKitImage::class)
     fun imageCaptured(image: CameraKitImage) {
         val jpeg = image.jpeg
 
@@ -110,7 +101,7 @@ class CameraControls @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     //@OnTouch(R.id.captureButton)
-    internal fun onTouchCapture(view: View, motionEvent: MotionEvent): Boolean {
+    fun onTouchCapture(view: View, motionEvent: MotionEvent): Boolean {
         handleViewTouchFeedback(view, motionEvent)
         when (motionEvent.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -133,64 +124,6 @@ class CameraControls @JvmOverloads constructor(context: Context, attrs: Attribut
                 } else {
                     captureStartTime = System.currentTimeMillis()
                     cameraView!!.captureImage { event -> imageCaptured(event) }
-                }
-            }
-        }
-        return true
-    }
-
-    //@OnTouch(R.id.facingButton)
-    internal fun onTouchFacing(view: View, motionEvent: MotionEvent): Boolean {
-        handleViewTouchFeedback(view, motionEvent)
-        when (motionEvent.action) {
-            MotionEvent.ACTION_UP -> {
-                coverView!!.alpha = 0f
-                coverView!!.visibility = View.VISIBLE
-                coverView!!.animate()
-                        .alpha(1f)
-                        .setStartDelay(0)
-                        .setDuration(300)
-                        .setListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                super.onAnimationEnd(animation)
-                                if (cameraView!!.isFacingFront) {
-                                    cameraView!!.facing = CameraKit.Constants.FACING_BACK
-                                    changeViewImageResource(view as ImageView, R.drawable.ic_facing_front)
-                                } else {
-                                    cameraView!!.facing = CameraKit.Constants.FACING_FRONT
-                                    changeViewImageResource(view as ImageView, R.drawable.ic_facing_back)
-                                }
-
-                                coverView!!.animate()
-                                        .alpha(0f)
-                                        .setStartDelay(200)
-                                        .setDuration(300)
-                                        .setListener(object : AnimatorListenerAdapter() {
-                                            override fun onAnimationEnd(animation: Animator) {
-                                                super.onAnimationEnd(animation)
-                                                coverView!!.visibility = View.GONE
-                                            }
-                                        })
-                                        .start()
-                            }
-                        })
-                        .start()
-            }
-        }
-        return true
-    }
-
-    //@OnTouch(R.id.flashButton)
-    internal fun onTouchFlash(view: View, motionEvent: MotionEvent): Boolean {
-        handleViewTouchFeedback(view, motionEvent)
-        when (motionEvent.action) {
-            MotionEvent.ACTION_UP -> {
-                if (cameraView!!.flash == CameraKit.Constants.FLASH_OFF) {
-                    cameraView!!.flash = CameraKit.Constants.FLASH_ON
-                    changeViewImageResource(view as ImageView, R.drawable.ic_flash_on)
-                } else {
-                    cameraView!!.flash = CameraKit.Constants.FLASH_OFF
-                    changeViewImageResource(view as ImageView, R.drawable.ic_flash_off)
                 }
             }
         }
