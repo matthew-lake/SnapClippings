@@ -13,6 +13,7 @@ import android.view.View
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
+import butterknife.OnTouch
 
 import com.wonderkiln.camerakit.CameraKit
 import com.wonderkiln.camerakit.CameraKitEventCallback
@@ -84,8 +85,8 @@ class CameraControls @JvmOverloads constructor(context: Context, attrs: Attribut
         ResultHolder.image = jpeg
         ResultHolder.nativeCaptureSize = cameraView!!.captureSize
         ResultHolder.timeToCallback = callbackTime - captureStartTime
-        //val intent = Intent(context, PreviewActivity::class.java)
-        //context.startActivity(intent)
+        val intent = Intent(context, PreviewActivity::class.java)
+        context.startActivity(intent)
     }
 
     @OnCameraKitEvent(CameraKitVideo::class)
@@ -101,6 +102,7 @@ class CameraControls @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     //@OnTouch(R.id.captureButton)
+    @OnTouch(R.id.captureButton)
     fun onTouchCapture(view: View, motionEvent: MotionEvent): Boolean {
         handleViewTouchFeedback(view, motionEvent)
         when (motionEvent.action) {
