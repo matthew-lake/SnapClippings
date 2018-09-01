@@ -6,10 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.wonderkiln.camerakit.CameraView
-        android:id="@+id/camera"
+    <FrameLayout
+        android:id="@+id/contentFrame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true" />
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="130dp">
+
+            <com.wonderkiln.camerakit.CameraView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/camera"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:ckCropOutput="false"
+                app:ckDoubleTapToToggleFacing="true"
+                app:ckFacing="back"
+                app:ckFlash="off"
+                app:ckFocus="tapWithMarker"
+                app:ckJpegQuality="100"
+                app:ckMethod="standard"
+                app:ckPinchToZoom="true"
+                app:ckVideoQuality="highest"
+                app:ckZoom="2.0" />
+
+        </FrameLayout>
+
+        <View
+            android:id="@+id/blackCover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:visibility="gone" />
+
+        <com.mgtlake.snapclippings.CameraControls xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimaryDark"
+            android:elevation="7dp"
+            app:camera="@+id/camera"
+            app:cover="@+id/blackCover"/>
+
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
